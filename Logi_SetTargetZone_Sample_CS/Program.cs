@@ -18,7 +18,9 @@ namespace Logi_SetTargetZone_Sample_CS
     {
         static void Main(string[] args)
         {
-            int a;
+            bool result;
+           ConsoleKey tecla;
+            int r=1, g=0, b=0;
             Console.WriteLine("Inicio de la depuración");
             // Initialize the LED SDK
             //bool LedInitialized = LogitechGSDK.LogiLedInitWithName("SetTargetZone Sample C#");
@@ -47,8 +49,40 @@ namespace Logi_SetTargetZone_Sample_CS
             LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 5, 0, 100, 0);
 
             // Test Efects on G213 keyboard
+            Console.WriteLine("Press \"ENTER\" to begin efects...");
+            Console.ReadLine();
+            result =LogitechGSDK.LogiLedSaveCurrentLighting(); // Save configuración
 
-            
+           // result = LogitechGSDK.LogiLedPulseLighting(100, 100, 100, 3000, 250);
+            result = LogitechGSDK.LogiLedFlashLighting(100, 100, 100, 3000, 250);
+
+            result = LogitechGSDK.LogiLedRestoreLighting();      // Restore configuración
+
+            Console.WriteLine("Press \"ENTER\" to scan keyboard...");
+            Console.WriteLine("Press ESC to stop");
+            do
+            {
+                tecla = Console.ReadKey(true).Key;
+                switch (tecla)
+                {
+
+                    case ConsoleKey.P:
+                        r++;
+                        if (r > 100) r = 100;
+                        break;
+
+                    case ConsoleKey.O:
+                        r--;
+                        if (r < 0) r = 0;
+
+                        break;
+                    default:
+                        break;
+
+                }
+                LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Keyboard, 1, r,g,b);
+            } while ( tecla != ConsoleKey.Escape);
+
 
             Console.WriteLine("Press \"ENTER\" to exit...");
             Console.ReadLine();
